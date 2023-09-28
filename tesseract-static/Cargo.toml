@@ -18,4 +18,4 @@ thiserror = "1.0.39"
 link-cplusplus = "1.0"
 
 [build-dependencies]
-# bindgen = "0.64.0"
+bindgen = "0.68.1"

@@ -1,12 +1,11 @@
-use std::env;
+use std::{env, fs};
 use std::path::{Path, PathBuf};
 
-/*
 
 fn generate_tesseract_bindings() {
     let path1 = Path::new(concat!(
         env!("CARGO_MANIFEST_DIR"),
-        "/src/third_party/tesseract/include/"
+        "/src/third_party/tesseract/"
     ));
     let path1 = path1.canonicalize().unwrap();
     let clang_extra_include = vec![
@@ -58,14 +57,14 @@ fn generate_tesseract_bindings() {
 fn generate_leptonica_bindings() {
     let include_path = Path::new(concat!(
         env!("CARGO_MANIFEST_DIR"),
-        "/src/third_party/leptonica/src/"
+        "/src/third_party/leptonica/"
     ))
     .canonicalize()
     .unwrap();
     let bindings = bindgen::Builder::default()
         .header(concat!(
             env!("CARGO_MANIFEST_DIR"),
-            "/src/third_party/leptonica/src/allheaders.h"
+            "/src/third_party/leptonica/allheaders.h"
         ))
         .detect_include_paths(true)
         .clang_arg(format!("-I{}", include_path.display().to_string()));
@@ -83,8 +82,6 @@ fn generate_leptonica_bindings() {
         .write_to_file(out_path)
         .expect("Couldn't write bindings!");
 }
-
-#[cfg(not(target_os = "macos"))]
 fn public_types_bindings(clang_extra_include: &[String]) -> String {
     let mut public_types_bindings = bindgen::Builder::default()
         .header(concat!(
@@ -108,19 +105,15 @@ fn public_types_bindings(clang_extra_include: &[String]) -> String {
         .replace("tesseract_k", "k")
 }
 
-// MacOS clang is incompatible with Bindgen and constexpr
-// https://github.com/rust-lang/rust-bindgen/issues/1948
-// Hardcode the constants rather than reading them dynamically
-#[cfg(target_os = "macos")]
-fn public_types_bindings(_clang_extra_include: &[String]) -> &'static str {
-    include_str!("src/tesseract_sys/public_types_bindings_mac.rs")
+
+
+
+
+
+
+fn main() {
+     //let (leptonica_lib, _leptonica_includes) = compile_leptonica(&download_leptonica());
+     //let (tesseract_lib, _tesseract_includes) = compile_tesseract(&download_tesseract());
+    generate_leptonica_bindings();
+    generate_tesseract_bindings();
 }
-
-*/
-
-// let (leptonica_lib, _leptonica_includes) = compile_leptonica(&download_leptonica());
-// let (tesseract_lib, _tesseract_includes) = compile_tesseract(&download_tesseract());
-// generate_leptonica_bindings(&leptonica_includes);
-// generate_tesseract_bindings(&tesseract_includes);
-
-fn main() {}

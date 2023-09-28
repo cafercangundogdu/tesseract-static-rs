@@ -3,7 +3,7 @@ use std::env;
 use std::path::{Path, PathBuf};
 
 pub fn download_leptonica() -> PathBuf {
-    let source = "https://github.com/fschutt/tesseract-static-rs/files/11274620/leptonica-1b1d7ade6d753e8af2d023cff15d7862cd7b8413.tar.gz";
+    let source = "http://localhost:3000/leptonica-1b1d7ade6d753e8af2d023cff15d7862cd7b8413.tar.gz";
     let target = Path::new(&env::var("OUT_DIR").unwrap()).join("leptonica");
     std::fs::create_dir_all(&target).unwrap();
     download_and_unpack(source, &target)
@@ -83,13 +83,14 @@ pub fn compile_leptonica(source_dir: &Path) -> (PathBuf, Vec<PathBuf>) {
     let library_path = dst
         .join("lib")
         .join({
-            #[cfg(not(target_os = "windows"))]
+            #[cfg(not(target_os= "windows"))]
             {
-                "libleptonica.a"
+                eprintln!("working...");
+                "libleptonica-1.84.0d.a"
             }
             #[cfg(target_os = "windows")]
             {
-                "leptonica-1.84.0.lib"
+                "leptonica-1.84.0.a"
             }
         })
         .canonicalize()
@@ -99,7 +100,7 @@ pub fn compile_leptonica(source_dir: &Path) -> (PathBuf, Vec<PathBuf>) {
 }
 
 pub fn download_tesseract() -> PathBuf {
-    let source = "https://github.com/tesseract-ocr/tesseract/archive/refs/tags/5.3.0.tar.gz";
+    let source = "http://localhost:3000/tesseract-5.3.2.tar.gz";
     let target = Path::new(&env::var("OUT_DIR").unwrap()).join("tesseract");
     std::fs::create_dir_all(&target).unwrap();
     download_and_unpack(source, &target)
@@ -127,7 +128,7 @@ pub fn compile_tesseract(source_dir: &Path) -> (PathBuf, Vec<PathBuf>) {
 
     let _ = fs_extra::dir::copy(&source_dir, &base_dir, &CopyOptions::default());
 
-    let base_dir = base_dir.join("tesseract").join("tesseract-5.3.0");
+    let base_dir = base_dir.join("tesseract").join("tesseract-5.3.2");
 
     let cmakelists = std::fs::read_to_string(base_dir.join("CMakeLists.txt"))
         .unwrap()
@@ -153,6 +154,7 @@ pub fn compile_tesseract(source_dir: &Path) -> (PathBuf, Vec<PathBuf>) {
         .configure_arg("-DINSTALL_CONFIGS=ON")
         .configure_arg("-DBUILD_PROG=OFF")
         .configure_arg("-DSW_BUILD=OFF")
+        .configure_arg("-DLEPT_TIFF_RESULT:STRING=FALSE")
         .build();
 
     eprintln!("library path tesseract {}", dst.display());
@@ -162,7 +164,7 @@ pub fn compile_tesseract(source_dir: &Path) -> (PathBuf, Vec<PathBuf>) {
         .join({
             #[cfg(not(target_os = "windows"))]
             {
-                "libtesseract.a"
+                "libtesseract53d.a"
             }
             #[cfg(target_os = "windows")]
             {
@@ -186,8 +188,8 @@ pub fn print_cargo_link_includes(leptonica_lib: &Path, tesseract_lib: &Path) {
             "cargo:rustc-link-search={}",
             tesseract_lib.parent().unwrap().display()
         );
-        println!("cargo:rustc-link-lib=static=tesseract");
-        println!("cargo:rustc-link-lib=static=leptonica");
+        println!("cargo:rustc-link-lib=static=tesseract53d");
+        println!("cargo:rustc-link-lib=static=leptonica-1.84.0d");
     }
 
     #[cfg(target_os = "linux")]
