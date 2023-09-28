@@ -90,7 +90,7 @@ pub fn compile_leptonica(source_dir: &Path) -> (PathBuf, Vec<PathBuf>) {
             }
             #[cfg(target_os = "windows")]
             {
-                "leptonica-1.84.0.a"
+                "leptonica-1.84.0.lib"
             }
         })
         .canonicalize()
@@ -200,6 +200,15 @@ pub fn print_cargo_link_includes(leptonica_lib: &Path, tesseract_lib: &Path) {
 
     #[cfg(target_os = "windows")]
     {
+        println!(
+            "cargo:rustc-link-search={}",
+            leptonica_lib.parent().unwrap().display()
+        );
+        println!(
+            "cargo:rustc-link-search={}",
+            tesseract_lib.parent().unwrap().display()
+        );
+
         println!("cargo:rustc-link-arg={}", leptonica_lib.display());
         println!("cargo:rustc-link-arg={}", tesseract_lib.display());
     }

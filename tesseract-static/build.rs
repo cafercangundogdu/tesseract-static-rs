@@ -1,7 +1,7 @@
-use std::{env, fs};
-use std::path::{Path, PathBuf};
+//use std::{env, fs};
+//use std::path::{Path, PathBuf};
 
-
+/*
 fn generate_tesseract_bindings() {
     let path1 = Path::new(concat!(
         env!("CARGO_MANIFEST_DIR"),
@@ -108,12 +108,12 @@ fn public_types_bindings(clang_extra_include: &[String]) -> String {
 
 
 
-
+*/
 
 
 fn main() {
      //let (leptonica_lib, _leptonica_includes) = compile_leptonica(&download_leptonica());
      //let (tesseract_lib, _tesseract_includes) = compile_tesseract(&download_tesseract());
-    generate_leptonica_bindings();
-    generate_tesseract_bindings();
+    //generate_leptonica_bindings();
+    //generate_tesseract_bindings();
 }
